@@ -30,6 +30,8 @@ class AdminPanelProvider extends PanelProvider
     public function panel(Panel $panel): Panel
     {
         return $panel
+            ->maxContentWidth('full')
+            ->topNavigation()
             ->default()
             ->id('admin')
             ->path('admin')

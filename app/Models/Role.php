@@ -5,15 +5,11 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Stancl\Tenancy\Database\Concerns\BelongsToTenant;
 
-class Category extends Model
+class Role extends Model
 {
-    use SoftDeletes;
+    use SoftDeletes, BelongsToTenant;
     protected $fillable = ['status', 'name', 'description'];
 
-    // A category has many sub-categories
-    public function subCategories(): HasMany
-    {
-        return $this->hasMany(SubCategory::class)->where('status', 1);
-    }
 }

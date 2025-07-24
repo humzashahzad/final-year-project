@@ -2,21 +2,27 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\CategoryResource\Pages;
-use App\Models\Category;
-use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\TextInput;
+use App\Filament\Resources\RoleResource\Pages;
+use App\Filament\Resources\RoleResource\RelationManagers;
+use App\Models\Role;
+use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Columns\Layout\Stack;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
+use Filament\Tables\Columns\Layout\Stack;
+use Filament\Tables\Columns\ToggleColumn;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
+use Filament\Forms\Components\Toggle;
+use Filament\Actions\Action;
 
-class CategoryResource extends Resource
+class RoleResource extends Resource
 {
-    protected static ?string $model = Category::class;
+    protected static ?string $model = Role::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
@@ -30,6 +36,8 @@ class CategoryResource extends Resource
                     ->columnSpanFull(),
                 Textarea::make('description')
                     ->columnSpanFull(),
+                Toggle::make('status')
+                    ->default(true)
             ]);
     }
 
@@ -38,7 +46,11 @@ class CategoryResource extends Resource
         return $table
             ->columns([
                 Stack::make([ 
-                    TextColumn::make('name')->searchable(),
+                    Tables\Columns\TextColumn::make('tenant_id')
+                        ->searchable(),
+                    Tables\Columns\TextColumn::make('name')
+                        ->numeric()
+                        ->sortable(),
                     ToggleColumn::make('status'),
                 ]),
             ])
@@ -50,7 +62,7 @@ class CategoryResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make()->modalWidth('sm')->slideOver(),
+                Tables\Actions\EditAction::make()->modalWidth('xs')->slideOver(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -69,9 +81,9 @@ class CategoryResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListCategories::route('/'),
-            // 'create' => Pages\CreateCategory::route('/create'),
-            // 'edit' => Pages\EditCategory::route('/{record}/edit'),
+            'index' => Pages\ListRoles::route('/'),
+            // 'create' => Pages\CreateRole::route('/create'),
+            // 'edit' => Pages\EditRole::route('/{record}/edit'),
         ];
     }
 }

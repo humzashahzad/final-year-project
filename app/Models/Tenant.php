@@ -13,16 +13,18 @@ class Tenant extends BaseTenant implements TenantWithDatabase
     use HasDatabase, HasDomains, SoftDeletes;
     protected $fillable = [
         'id',
+        'status'
     ];
     public static function getCustomColumns(): array
     {
         return [
             'id',
+            'status'
         ];
     }
     public function tenant_user()
     {
-        return $this->belongsTo(User::class, 'id', 'tenant_id');
+        return $this->belongsTo(User::class, 'id', 'tenant_id')->where('status', 1);
     }
     public function tenant_domain()
     {

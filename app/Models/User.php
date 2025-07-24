@@ -24,6 +24,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
      * @var list<string>
      */
     protected $fillable = [
+        'status',
         'tenant_id',
         'avatar_url',
         'name',
@@ -55,7 +56,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
     }
     public function tenant()
     {
-        return $this->hasOne(Tenant::class);
+        return $this->hasOne(Tenant::class)->where('status', 1);
     }
     public function canAccessPanel(Panel $panel): bool
     {

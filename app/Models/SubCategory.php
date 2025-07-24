@@ -9,9 +9,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class SubCategory extends Model
 {
     use SoftDeletes;
-    protected $fillable = ['category_id', 'name', 'description'];
+    protected $fillable = ['status', 'category_id', 'name', 'description'];
     public function category(): BelongsTo
     {
-        return $this->belongsTo(Category::class);
+        return $this->belongsTo(Category::class)->where('status', 1);
     }
 }

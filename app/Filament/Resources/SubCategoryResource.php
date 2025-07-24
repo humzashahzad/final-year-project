@@ -10,6 +10,9 @@ use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
+use Filament\Tables\Columns\Layout\Stack;
+use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
@@ -25,6 +28,7 @@ class SubCategoryResource extends Resource
         return $form
             ->schema([
                 Forms\Components\Select::make('category_id')
+                    ->label('Category')
                     ->searchable()
                     ->options(Category::pluck('name', 'id'))
                     ->required(),
@@ -40,29 +44,21 @@ class SubCategoryResource extends Resource
     {
         return $table
             ->columns([
-                Tables\Columns\TextColumn::make('category.name')
-                    ->numeric()
-                    ->sortable(),
-                Tables\Columns\TextColumn::make('name')
-                    ->searchable(),
-                Tables\Columns\TextColumn::make('created_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('updated_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
-                Tables\Columns\TextColumn::make('deleted_at')
-                    ->dateTime()
-                    ->sortable()
-                    ->toggleable(isToggledHiddenByDefault: true),
+                Stack::make([ 
+                    TextColumn::make('name')->searchable(),
+                    TextColumn::make('category.name')->searchable(),
+                    ToggleColumn::make('status'),
+                ]),
+            ])
+            ->contentGrid([
+                'md' => 4,
+                'xl' => 4,
             ])
             ->filters([
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                Tables\Actions\EditAction::make()->modalWidth('sm')->slideOver(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -82,8 +78,8 @@ class SubCategoryResource extends Resource
     {
         return [
             'index' => Pages\ListSubCategories::route('/'),
-            'create' => Pages\CreateSubCategory::route('/create'),
-            'edit' => Pages\EditSubCategory::route('/{record}/edit'),
+            // 'create' => Pages\CreateSubCategory::route('/create'),
+            // 'edit' => Pages\EditSubCategory::route('/{record}/edit'),
         ];
     }
 }

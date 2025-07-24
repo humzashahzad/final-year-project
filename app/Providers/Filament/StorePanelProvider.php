@@ -33,6 +33,8 @@ class StorePanelProvider extends PanelProvider
     public function panel(Panel $panel): Panel
     {
         return $panel
+            ->maxContentWidth('full')
+            ->topNavigation()
             ->id('store')
             ->path('store')
             ->login()

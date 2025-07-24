@@ -28,7 +28,8 @@ class CreateTenant extends CreateRecord
         ]);
 
         $tenant->domains()->create([
-            'domain' => Str::slug($data['domain']).'.'.(app()->environment('production') ? 'm-dev.io' : 'localhost')
+            'domain' => Str::slug($data['domain']).'.'.(app()->environment('production') ? 'm-dev.io' : 'localhost'),
+            'name' => Str::slug($data['domain'])
         ]);
         
         User::where('id', $user->id)->update([
