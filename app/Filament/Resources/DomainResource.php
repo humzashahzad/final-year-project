@@ -2,28 +2,28 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\CategoryResource\Pages;
-use App\Models\Category;
-use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\TextInput;
+use App\Filament\Resources\DomainResource\Pages;
+use App\Filament\Resources\DomainResource\RelationManagers;
+use App\Models\Domain;
+use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
-use Filament\Tables\Columns\Layout\Stack;
 use Filament\Tables\Columns\TextColumn;
-use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Table;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class CategoryResource extends Resource
+class DomainResource extends Resource
 {
-    protected static ?string $model = Category::class;
+    protected static ?string $model = Domain::class;
     public static function getNavigationIcon(): string
     {
         return 'heroicon-o-rectangle-stack';
     }
     public static function canCreate(): bool
     {  
-        return true;
+        return false;
     }
     public static function canViewAny(): bool
     {
@@ -31,11 +31,11 @@ class CategoryResource extends Resource
     }
     public static function canEdit($record): bool
     {
-        return true;
+        return false;
     }
     public static function canDelete($record): bool
     {   
-        return true;
+        return false;
     }
     public static function shouldRegisterNavigation(): bool
     {   
@@ -47,40 +47,19 @@ class CategoryResource extends Resource
     }
     public static function getNavigationGroup(): ?string
     {
-        return 'Category';
+        return 'SAAS Configration';
     }
-
-    public static function form(Form $form): Form
-    {
-        return $form
-            ->schema([
-                TextInput::make('name')
-                    ->required()
-                    ->maxLength(255)
-                    ->columnSpanFull(),
-                Textarea::make('description')
-                    ->columnSpanFull(),
-            ]);
-    }
-
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                Stack::make([ 
-                    TextColumn::make('name')->searchable(),
-                    ToggleColumn::make('status'),
-                ]),
-            ])
-            ->contentGrid([
-                'md' => 4,
-                'xl' => 4,
+                TextColumn::make('domain')->label('Domain')->searchable(),
             ])
             ->filters([
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make()->modalWidth('sm')->slideOver(),
+                Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -99,9 +78,9 @@ class CategoryResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListCategories::route('/'),
-            // 'create' => Pages\CreateCategory::route('/create'),
-            // 'edit' => Pages\EditCategory::route('/{record}/edit'),
+            'index' => Pages\ListDomains::route('/'),
+            'create' => Pages\CreateDomain::route('/create'),
+            'edit' => Pages\EditDomain::route('/{record}/edit'),
         ];
     }
 }

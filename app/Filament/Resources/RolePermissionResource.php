@@ -2,27 +2,30 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\RoleResource\Pages;
-use App\Filament\Resources\RoleResource\RelationManagers;
+use App\Filament\Resources\RolePermissionResource\Pages;
+use App\Filament\Resources\RolePermissionResource\RelationManagers;
+use App\Models\NavigationMenu;
 use App\Models\Role;
+use App\Models\RolePermission;
 use Filament\Forms;
+use Filament\Forms\Components\Checkbox;
+use Filament\Forms\Components\Select;
+use Filament\Forms\Components\Tabs;
+use Filament\Forms\Components\Tabs\Tab;
 use Filament\Forms\Form;
+use Filament\Forms\Get;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
-use Filament\Tables\Columns\Layout\Stack;
-use Filament\Tables\Columns\ToggleColumn;
-use Filament\Tables\Columns\TextColumn;
-use Filament\Forms\Components\Textarea;
-use Filament\Forms\Components\TextInput;
-use Filament\Forms\Components\Toggle;
-use Filament\Actions\Action;
+use Illuminate\Support\Arr;
+use Illuminate\Database\Eloquent\Collection;
+use Illuminate\Support\Str;
 
-class RoleResource extends Resource
+class RolePermissionResource extends Resource
 {
-    protected static ?string $model = Role::class;
+    protected static ?string $model = RolePermission::class;
 
 
     public static function getNavigationIcon(): string
@@ -58,34 +61,26 @@ class RoleResource extends Resource
         return 'Role & Permissions';
     }
 
-    public static function form(Form $form): Form
-    {
-        return $form
-            ->schema([
-                TextInput::make('name')
-                    ->required()
-                    ->maxLength(255)
-                    ->columnSpanFull(),
-                Textarea::make('description')
-                    ->columnSpanFull(),
-                Toggle::make('status')
-                    ->default(true)
-            ]);
-    }
-
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
-                TextColumn::make('domain.name')->searchable(),
-                TextColumn::make('name')->searchable(),
-                ToggleColumn::make('status')->width('100px'),
+                //
             ])
             ->filters([
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make()->modalWidth('xs')->slideOver(),
+                Tables\Actions\CreateAction::make()
+                    ->modalHeading('Create New Post') // Custom modal title
+                    ->modalWidth('7xl') // Extra large modal
+                    ->modalSubmitActionLabel('Save Post') // Custom submit button text
+                    ->form([]) // Explicitly use your form definition
+                    ->using(function (array $data) {
+                        // Custom create logic
+                        return static::getModel()::create($data);
+                    }),
+                Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -104,9 +99,9 @@ class RoleResource extends Resource
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListRoles::route('/'),
-            // 'create' => Pages\CreateRole::route('/create'),
-            // 'edit' => Pages\EditRole::route('/{record}/edit'),
+            'index' => Pages\ListRolePermissions::route('/'),
+            // 'create' => Pages\CreateRolePermission::route('/create'),
+            // 'edit' => Pages\EditRolePermission::route('/{record}/edit'),
         ];
     }
 }

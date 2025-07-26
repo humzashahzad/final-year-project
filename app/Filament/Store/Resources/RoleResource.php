@@ -1,62 +1,26 @@
 <?php
 
-namespace App\Filament\Resources;
+namespace App\Filament\Store\Resources;
 
-use App\Filament\Resources\RoleResource\Pages;
-use App\Filament\Resources\RoleResource\RelationManagers;
+use App\Filament\Store\Resources\RoleResource\Pages;
+use App\Filament\Store\Resources\RoleResource\RelationManagers;
 use App\Models\Role;
-use Filament\Forms;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
 use Filament\Tables\Table;
-use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\SoftDeletingScope;
 use Filament\Tables\Columns\Layout\Stack;
 use Filament\Tables\Columns\ToggleColumn;
-use Filament\Tables\Columns\TextColumn;
 use Filament\Forms\Components\Textarea;
 use Filament\Forms\Components\TextInput;
 use Filament\Forms\Components\Toggle;
-use Filament\Actions\Action;
+use Filament\Tables\Columns\TextColumn;
 
 class RoleResource extends Resource
 {
     protected static ?string $model = Role::class;
 
-
-    public static function getNavigationIcon(): string
-    {
-        return 'heroicon-o-rectangle-stack';
-    }
-    public static function canCreate(): bool
-    {  
-        return true;
-    }
-    public static function canViewAny(): bool
-    {
-        return true;
-    }
-    public static function canEdit($record): bool
-    {
-        return true;
-    }
-    public static function canDelete($record): bool
-    {   
-        return true;
-    }
-    public static function shouldRegisterNavigation(): bool
-    {   
-        return true;
-    }
-    public static function getNavigationSort(): int
-    {
-        return 1;
-    }
-    public static function getNavigationGroup(): ?string
-    {
-        return 'Role & Permissions';
-    }
+    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
 
     public static function form(Form $form): Form
     {
@@ -65,7 +29,7 @@ class RoleResource extends Resource
                 TextInput::make('name')
                     ->required()
                     ->maxLength(255)
-                    ->columnSpanFull(),
+                    ->columnSpanFull()->default('hamza'),
                 Textarea::make('description')
                     ->columnSpanFull(),
                 Toggle::make('status')
@@ -77,8 +41,8 @@ class RoleResource extends Resource
     {
         return $table
             ->columns([
-                TextColumn::make('domain.name')->searchable(),
                 TextColumn::make('name')->searchable(),
+                TextColumn::make('description')->searchable(),
                 ToggleColumn::make('status')->width('100px'),
             ])
             ->filters([

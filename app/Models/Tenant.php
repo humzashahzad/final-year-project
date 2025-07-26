@@ -13,13 +13,15 @@ class Tenant extends BaseTenant implements TenantWithDatabase
     use HasDatabase, HasDomains, SoftDeletes;
     protected $fillable = [
         'id',
-        'status'
+        'status',
+        'slug'
     ];
     public static function getCustomColumns(): array
     {
         return [
             'id',
-            'status'
+            'status',
+            'slug'
         ];
     }
     public function tenant_user()

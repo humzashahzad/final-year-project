@@ -21,7 +21,38 @@ class SubCategoryResource extends Resource
 {
     protected static ?string $model = SubCategory::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    public static function getNavigationIcon(): string
+    {
+        return 'heroicon-o-rectangle-stack';
+    }
+    public static function canCreate(): bool
+    {  
+        return true;
+    }
+    public static function canViewAny(): bool
+    {
+        return true;
+    }
+    public static function canEdit($record): bool
+    {
+        return true;
+    }
+    public static function canDelete($record): bool
+    {   
+        return true;
+    }
+    public static function shouldRegisterNavigation(): bool
+    {   
+        return true;
+    }
+    public static function getNavigationSort(): int
+    {
+        return 1;
+    }
+    public static function getNavigationGroup(): ?string
+    {
+        return 'Category';
+    }
 
     public static function form(Form $form): Form
     {

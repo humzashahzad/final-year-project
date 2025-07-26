@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -31,6 +32,7 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
         'email',
         'password',
     ];
+    protected $guarded = ['tenant_id'];
 
     /**
      * The attributes that should be hidden for serialization.
@@ -57,6 +59,10 @@ class User extends Authenticatable implements FilamentUser, HasAvatar
     public function tenant()
     {
         return $this->hasOne(Tenant::class)->where('status', 1);
+    }
+    public function domain()
+    {
+        return $this->belongsTo(Domain::class, 'tenant_id', 'tenant_id');
     }
     public function canAccessPanel(Panel $panel): bool
     {

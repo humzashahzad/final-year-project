@@ -18,8 +18,6 @@ class EditTenant extends EditRecord
 
         parent::mount($record);
 
-        dd($record);
-
         $Tenant = Tenant::with(['tenant_user', 'tenant_domain'])->findOrFail($record);
 
         $this->form->fill([

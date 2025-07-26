@@ -16,7 +16,7 @@ class CreateTenant extends CreateRecord
     protected static string $resource = TenantResource::class;
     protected function handleRecordCreation(array $data): Tenant
     {
-
+        
         $user = User::create([
             'name'     => $data['name'],
             'email'    => $data['email'],

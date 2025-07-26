@@ -19,8 +19,38 @@ use Illuminate\Database\Eloquent\SoftDeletingScope;
 class TenantResource extends Resource
 {
     protected static ?string $model = Tenant::class;
-
-    protected static ?string $navigationIcon = 'heroicon-o-rectangle-stack';
+    public static function getNavigationIcon(): string
+    {
+        return 'heroicon-o-rectangle-stack';
+    }
+    public static function canCreate(): bool
+    {  
+        return true;
+    }
+    public static function canViewAny(): bool
+    {
+        return true;
+    }
+    public static function canEdit($record): bool
+    {
+        return true;
+    }
+    public static function canDelete($record): bool
+    {   
+        return true;
+    }
+    public static function shouldRegisterNavigation(): bool
+    {   
+        return true;
+    }
+    public static function getNavigationSort(): int
+    {
+        return 1;
+    }
+    public static function getNavigationGroup(): ?string
+    {
+        return 'SAAS Configration';
+    }
 
     public static function form(Form $form): Form
     {
@@ -28,7 +58,7 @@ class TenantResource extends Resource
             ->schema([
                 Grid::make(6)
                     ->schema([
-                        TextInput::make('tenant_user.name')
+                        TextInput::make('name')
                             ->required()
                             ->columnSpan(3),
                         TextInput::make('email')
@@ -72,7 +102,7 @@ class TenantResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make()->modalWidth('4xl')->slideOver(),
+                Tables\Actions\EditAction::make(),
             ])
             ->bulkActions([
                 Tables\Actions\BulkActionGroup::make([
@@ -87,13 +117,16 @@ class TenantResource extends Resource
             //
         ];
     }
-
     public static function getPages(): array
     {
         return [
             'index' => Pages\ListTenants::route('/'),
-            // 'create' => Pages\CreateTenant::route('/create'),
-            // 'edit' => Pages\EditTenant::route('/{record}/edit'),
+            'create' => Pages\CreateTenant::route('/create'),
+            'edit' => Pages\EditTenant::route('/{record}/edit'),
         ];
+    }
+    public static function getRecordRouteKeyName(): ?string
+    {
+        return 'slug';
     }
 }
